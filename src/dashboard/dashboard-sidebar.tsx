@@ -1,6 +1,6 @@
 import { ChevronDown, LogIn } from "lucide-react";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useMatches } from "react-router-dom";
 import { cn } from "../../utils/cn";
 import { Analytics, Billing, Home, Layer, User } from "../svg/all-link-icon";
 
@@ -17,31 +17,34 @@ const routesLink: RoutesLinkType[] = [
     link: "/",
     icon: <Layer />,
   },
-  { id: 2, name: "Analytics", link: "analytics", icon: <Analytics /> },
+  { id: 2, name: "Analytics", link: "/analytics", icon: <Analytics /> },
   {
     id: 3,
     name: "Billing",
-    link: "billing",
+    link: "/billing",
     icon: <Billing />,
   },
   {
     id: 4,
     name: "Company",
-    link: "company",
+    link: "/company",
     icon: <Home />,
   },
   {
     id: 5,
     name: "Admin",
-    link: "admin",
+    link: "/admin",
     icon: <User />,
   },
 ];
 
 export function DashboardRoute() {
+  const matches = useMatches();
+  const pathName = matches.map((m) => m.pathname);
+
   return (
-    <aside className="flex h-screen w-full overflow-x-clip flex-col overflow-y-auto bg-white border-r py-8">
-      <Link to={"/"} className="flex items-center">
+    <aside className="flex h-[100dvh] w-full overflow-x-clip flex-col overflow-y-auto bg-white border-r py-8 sticky top-0">
+      <Link to={"/"} className="flex items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="45"
@@ -60,11 +63,12 @@ export function DashboardRoute() {
       </Link>
       <div className="mt-6 flex flex-1 flex-col justify-between">
         <nav className="-mx-3">
-          {routesLink.map((route: RoutesLinkType) => (
-            <ul key={route.id} className="">
+          <ul className="">
+            {routesLink.map((route: RoutesLinkType) => (
               <li
-                className={cn("px-5 my-2 hover:bg-blue-50", {
-                  ["bg-blue-50"]: route.id === 1,
+                key={route.id}
+                className={cn("px-5 my-2 hover:bg-[#EFF8FF]", {
+                  ["bg-[#EFF8FF]"]: route.link === pathName[1],
                 })}
               >
                 <Link
@@ -84,8 +88,14 @@ export function DashboardRoute() {
                   </div>
                 </Link>
               </li>
-            </ul>
-          ))}
+            ))}
+            <li className={"px-5 py-2 hover:bg-[#EFF8FF] block cursor-pointer"}>
+              <div className="flex px-2.5 items-center">
+                <LogIn className="h-4 w-4 text-gray-400" />
+                <span className="mx-2 text-sm font-medium">Logout</span>
+              </div>
+            </li>
+          </ul>
         </nav>
         <div className="mt-6 px-1.5">
           <div className="rounded-lg bg-gray-100 p-3 ">
@@ -101,24 +111,6 @@ export function DashboardRoute() {
               src="https://images.unsplash.com/photo-1605379399642-870262d3d051?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1806&q=80"
               alt="Feature"
             />
-          </div>
-          <div className="mt-6 flex items-center justify-between">
-            <a href="#" className="flex items-center gap-x-2">
-              <img
-                className="h-7 w-7 rounded-full object-cover"
-                src="https://github.com/tanvir1017.png"
-                alt="avatar"
-              />
-              <span className="text-sm font-medium text-gray-700">
-                Tanvir Hossain
-              </span>
-            </a>
-            <a
-              href="#"
-              className="rotate-180 text-gray-800 transition-colors duration-200 hover:text-gray-900"
-            >
-              <LogIn className="h-5 w-5" />
-            </a>
           </div>
         </div>
       </div>
