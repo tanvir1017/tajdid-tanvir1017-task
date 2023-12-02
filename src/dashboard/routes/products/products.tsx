@@ -1,8 +1,8 @@
 import { useLoaderData } from "react-router-dom";
-import { ProductTypes } from "../../types/types";
-import Header from "./products/header";
-import ProductCard from "./products/p-card";
-import Pagination from "./products/pagination";
+import { ProductTypes } from "../../../types/types";
+import Header from "./header";
+import ProductCard from "./p-card";
+import Pagination from "./pagination";
 
 const Products = () => {
   const productsData = useLoaderData() as ProductTypes[];

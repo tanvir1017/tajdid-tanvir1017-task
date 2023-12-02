@@ -3,7 +3,8 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ErrorPage } from "./404";
 import DashboardRoot from "./dashboard/dashboard-root";
-import Products from "./dashboard/routes/products";
+import AddProduct from "./dashboard/routes/products/add-product";
+import Products from "./dashboard/routes/products/products";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <Products />,
         loader: () => fetch("https://fakestoreapi.com/products?limit=9"),
+      },
+      {
+        path: "/create-new-product",
+        element: <AddProduct />,
       },
       {
         path: "*",

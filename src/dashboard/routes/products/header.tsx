@@ -1,6 +1,8 @@
 import { ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigation = useNavigate();
   return (
     <div>
       <div className="flex items-center justify-between">
@@ -8,6 +10,7 @@ const Header = () => {
         <div className="flex items-start">
           <div className="flex items-center gap-3 mr-7">
             <button
+              onClick={() => navigation("/create-new-product")}
               type="button"
               className="rounded-md bg-blue-500 px-6 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
             >

@@ -4,13 +4,6 @@ import Rating from "react-rating";
 import { ProductTypes } from "../../../types/types";
 
 const ProductCard = ({ product }: { product: ProductTypes }) => {
-  const handleDeleteProduct = (id: number) => {
-    fetch(`https://fakestoreapi.com/products/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((json) => console.log(json));
-  };
   return (
     <div className="2xl:w-[380px] xl:w-[300px] border shadow rounded-md">
       <div className="2xl:h-[250px] xl:h-[200px] border-b relative p-3">
