@@ -1,53 +1,115 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader, UploadCloud, X } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { cn } from "../../../../utils/cn";
-import { postData } from "../../../../utils/mutation";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   ProductTypes,
   TProductSchema,
   productSchema,
 } from "../../../types/types";
 
-export default function AddProduct() {
-  // **Initialize navigation and query client hooks**
-  const navigation = useNavigate(); // Hook to navigate between pages
-  const queryClient = useQueryClient(); // Hook to manage query cache
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { cn } from "../../../../utils/cn";
 
-  // **Define product form using `useForm` hook**
+export default function UpdateProduct() {
+  const navigation = useNavigate();
+  const { productId } = useParams(); //Extracting params from url by **useParams()** hook
+  const queryClient = useQueryClient();
+
+  // Function to update an existing product using PUT request
+  const updateProduct = async (data: TProductSchema) => {
+    // Extract product data from the provided object
+    const { title, description, price } = data;
+
+    // Construct the API endpoint URL with the specified product ID
+    const productURL = `https://fakestoreapi.com/products/${productId}`;
+
+    // Send PUT request to the product URL with product data
+    const response = await fetch(productURL, {
+      method: "PUT", // Specify HTTP method as PUT
+      body: JSON.stringify({ title, description, price }), // Convert product data to JSON format
+    });
+
+    // Parse JSON response
+    const updatedProduct = await response.json();
+
+    // Return the updated product data
+    return updatedProduct;
+  };
+
+  // Fetch product details using `useQuery` hook
+  const {
+    isLoading, // Flag indicating if data is loading
+    data: productData, // Retrieved product data
+    isError, // Flag indicating if an error occurred
+  } = useQuery({
+    queryKey: [productId], // Unique query key for this product
+    queryFn: async () => {
+      // Function to fetch product data
+      // Construct the API endpoint URL with the specified product ID
+      const productURL = `https://fakestoreapi.com/products/${productId}`;
+
+      // Send GET request to the product URL
+      const response = await fetch(productURL);
+
+      // Parse JSON response
+      const product = await response.json();
+
+      // Return the fetched product data
+      return product;
+    },
+  });
+
+  // Define product form using `useForm` hook
   const {
     register, // Function to register form fields
     handleSubmit, // Function to handle form submission
     formState: { errors }, // Object containing form errors
+    getValues, // Function to access form values
   } = useForm<TProductSchema>({
     resolver: zodResolver(productSchema), // Schema for validating form data
   });
 
-  // **Define product mutation using `useMutation` hook**
+  // Define product mutation using `useMutation` hook
   const {
-    mutate, // Function to trigger mutation (submit product data)
+    mutate, // Function to trigger mutation (update product data)
     isPending, // Boolean indicating if mutation is in progress
   } = useMutation({
-    mutationFn: postData, // Function to submit product data to api server
-    onSuccess: (data) => {
+    mutationFn: updateProduct, // Function to update product data on the server
+    onSuccess: (updatedProduct) => {
       // Callback function executed when mutation succeeds
       // Update product list in cache
-      queryClient.setQueryData(["products"], (oldData: ProductTypes[]) => {
-        return [data, ...oldData]; // Prepend new product to existing list
+      queryClient.setQueryData(["products"], (prevProducts: ProductTypes[]) => {
+        // Find the index of the product to be updated
+        const editProductIndex = prevProducts.findIndex(
+          (product) => product.id === updatedProduct.id
+        );
+
+        // Create a copy of the product list
+        const products = [...prevProducts];
+
+        // Update the title, description, and price of the product in the copy
+        products[editProductIndex].title = getValues("title");
+        products[editProductIndex].description = getValues("description");
+        products[editProductIndex].price = Number(getValues("price"));
+
+        // Return the updated product list
+        return products;
       });
 
-      // Redirect to product list page after successfully update cache with new product 🧭
+      // Redirect to product list page
       navigation("/");
     },
   });
 
-  // **Submit product form data**
+  // Submit product form data
   const onSubmit: SubmitHandler<TProductSchema> = (data: TProductSchema) => {
+    // Callback function executed when form is submitted
     mutate(data); // Trigger mutation with form data
   };
 
+  if (isLoading) return <p>loading...</p>; // Showing loading state for more user interactivity
+  if (isError) return <p>Error found</p>; // Showing error state for more user interactivity
   return (
     <div className="px-6">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -63,6 +125,7 @@ export default function AddProduct() {
               placeholder={
                 errors.title ? errors.title.message : "Product Price"
               }
+              defaultValue={productData.title}
               {...register("title")}
               className={cn(
                 "border w-full px-1 py-2 rounded-md col-span-2 ring focus-visible:outline-none ring-slate-50 block",
@@ -78,6 +141,7 @@ export default function AddProduct() {
           <div className="grid grid-cols-4">
             <label className="block font-semibold">Price</label>
             <input
+              defaultValue={productData.price}
               placeholder={
                 errors.price ? errors.price.message : "Product Price"
               }
@@ -145,7 +209,7 @@ export default function AddProduct() {
             <div className=" gap-2 col-span-2 max-w-full">
               <textarea
                 className="border w-full rounded-md resize-none p-2  px-1 py-2 col-span-2 ring focus-visible:outline-none ring-slate-50"
-                defaultValue=""
+                defaultValue={productData.description}
                 placeholder="Write something about your products.."
                 {...register("description")}
                 rows={6}
@@ -166,7 +230,7 @@ function AddProductHeader({ isSubmitting }: { isSubmitting: boolean }) {
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Create Product</h1>
+          <h1 className="text-3xl font-bold">Update</h1>
           <p>Upload a product photo and details here</p>
         </div>
 
@@ -188,10 +252,10 @@ function AddProductHeader({ isSubmitting }: { isSubmitting: boolean }) {
               {isSubmitting ? (
                 <span>
                   <Loader className="animate-spin duration-200 w-4 h-4 mr-2 inline-table" />{" "}
-                  creating...
+                  Updating...
                 </span>
               ) : (
-                "Create"
+                "Update"
               )}
             </button>
           </div>
