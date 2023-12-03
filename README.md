@@ -15,9 +15,9 @@ This repository contains the Tajdid-Store E-commerce Dashboard, a dashboard cont
 
 ## Features
 
-- **_Load All Data_**: As project requirement, i utilize the faksoter API for load data by useQuery from Tanstack-query .
+- **_Load All Data_**: As project requirement, i utilize the `fakestoreapi` for load data by useQuery from Tanstack-query .
 
-- **_Insert Data_**: As part of the requirement, there is functionality to insert products into `fakestore` API. But, they won't allow the user to manipulate their real database. so, i use caching with `useQuery` by @Tanstack-query , to implement this features and meet the project requirement.
+- **_Insert Data_**: As part of the requirement, there is functionality to insert products into `fakestoreapi` . But, they won't allow the user to manipulate their real database. so, i use caching with `useQuery` by @Tanstack-query , to implement this features and meet the project requirement.
 
 - **_Delete Product_**: We can't manipulate their real DB for any HTTP request, as mentioned previously. Similarly, I use cached data to implement the `useMutation` feature.
 
