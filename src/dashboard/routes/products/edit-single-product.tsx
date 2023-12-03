@@ -171,7 +171,14 @@ export default function UpdateProduct() {
             {/* Product Photo Upload Section */}
             <div className="flex gap-2 col-span-2 max-w-full">
               <div className="2xl:w-[25vw] xl:w-full  border  p-2 rounded-md w-full flex">
-                <img src="/assets/images/cloths.png" className="m-auto" />
+                <img
+                  src={
+                    productData.image
+                      ? productData.image
+                      : "/assets/images/cloths.png"
+                  }
+                  className="m-auto"
+                />
               </div>
               <div className="2xl:w-[35vw] xl:w-full border cursor-pointer hover:bg-slate-50 rounded-md p-5">
                 <label htmlFor="file-input" className="cursor-pointer">

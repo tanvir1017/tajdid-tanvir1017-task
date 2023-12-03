@@ -8,9 +8,10 @@ This repository contains the Tajdid-Store E-commerce Dashboard, a dashboard cont
 
 1.  React.js,
 2.  React Router,
-3.  Tailwind CSS,
-4.  React Hook Form,
-5.  Zod - _**For Form Validation**_
+3.  React Query,
+4.  Tailwind CSS,
+5.  React Hook Form,
+6.  Zod - _**For Form Validation**_
 
 ## Features
 
@@ -27,3 +28,5 @@ This repository contains the Tajdid-Store E-commerce Dashboard, a dashboard cont
 - **_UI Design Via TailwindCSS_**: Tried to make the UI according to _**Figma**_ design, was given as task-list.
 
 - **_User Interactivity_**: For more user interactivity and part of task, I implemented _**@headlessUI**_ dialog or modal when user want to delete any product & ensure again that user .
+
+- **_Code Structure_**: Tried to make code Clean & Readable(Used explainable comment).
