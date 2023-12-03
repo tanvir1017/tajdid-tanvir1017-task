@@ -1,3 +1,11 @@
+/* Injecting Google Font */
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom CSS Styles */
+.brand-logo {
+  font-family: "Audiowide", sans-serif;
+}

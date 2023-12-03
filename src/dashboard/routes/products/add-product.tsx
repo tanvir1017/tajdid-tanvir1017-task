@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader, UploadCloud, X } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { cn } from "../../../../utils/cn";
 import { postData } from "../../../../utils/mutation";
 import {
   ProductTypes,
@@ -45,8 +44,10 @@ export default function AddProduct() {
 
   // **Submit product form data**
   const onSubmit: SubmitHandler<TProductSchema> = (data: TProductSchema) => {
+    console.log(typeof data.price);
     mutate(data); // Trigger mutation with form data
   };
+  console.log(errors);
 
   return (
     <div className="px-6">
@@ -59,37 +60,39 @@ export default function AddProduct() {
           {/* Product Title  Section */}
           <div className="grid grid-cols-4">
             <label className="block font-semibold">Title</label>
-            <input
-              placeholder={
-                errors.title ? errors.title.message : "Product Price"
-              }
-              {...register("title")}
-              className={cn(
-                "border w-full px-1 py-2 rounded-md col-span-2 ring focus-visible:outline-none ring-slate-50 block",
-                {
-                  ["placeholder:text-red-600"]: errors.title,
-                }
+            <div className="col-span-2">
+              <input
+                placeholder="Product Price"
+                {...register("title")}
+                className="border w-full px-1 py-2 rounded-md  ring focus-visible:outline-none ring-slate-50 block"
+              />
+              {errors.title && (
+                <span className="inline-block mt-1 text-red-500">
+                  {errors.title?.message}
+                </span>
               )}
-            />
+            </div>
           </div>
           {/* Product Title  Section */}
           <hr className="my-5 border border-slate-100 rounded-lg" />
           {/* Product Price  Section */}
           <div className="grid grid-cols-4">
             <label className="block font-semibold">Price</label>
-            <input
-              placeholder={
-                errors.price ? errors.price.message : "Product Price"
-              }
-              type="string"
-              className={cn(
-                "border w-full px-1 py-2 rounded-md col-span-2 ring focus-visible:outline-none ring-slate-50 block",
-                {
-                  ["placeholder:text-red-600"]: errors.price,
+            <div className="col-span-2">
+              <input
+                placeholder="Product Price"
+                type="string"
+                className={
+                  "border w-full px-1 py-2 rounded-md  ring focus-visible:outline-none ring-slate-50 block"
                 }
+                {...register("price")}
+              />
+              {errors.price && (
+                <span className="inline-block mt-1 text-red-500">
+                  {errors.price?.message}
+                </span>
               )}
-              {...register("price")}
-            />
+            </div>
           </div>
 
           {/* Product Price  Section */}

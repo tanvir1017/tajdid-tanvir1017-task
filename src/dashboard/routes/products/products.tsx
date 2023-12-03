@@ -3,7 +3,7 @@ import { getAllProductsData } from "../../../../utils/mutation";
 import { ProductTypes } from "../../../types/types";
 import Header from "./header";
 import ProductCard from "./p-card";
-import Pagination from "./pagination";
+import { Pagination } from "./pagination";
 
 const Products = () => {
   // Use the `useQuery` hook to fetch products data

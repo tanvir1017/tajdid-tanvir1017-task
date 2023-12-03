@@ -9,7 +9,6 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { cn } from "../../../../utils/cn";
 
 export default function UpdateProduct() {
   const navigation = useNavigate();
@@ -44,6 +43,7 @@ export default function UpdateProduct() {
     isError, // Flag indicating if an error occurred
   } = useQuery({
     queryKey: [productId], // Unique query key for this product
+    refetchOnMount: false, // Do not sending request to api for reFetch, instead loading data from cache
     queryFn: async () => {
       // Function to fetch product data
       // Construct the API endpoint URL with the specified product ID
@@ -121,39 +121,41 @@ export default function UpdateProduct() {
           {/* Product Title  Section */}
           <div className="grid grid-cols-4">
             <label className="block font-semibold">Title</label>
-            <input
-              placeholder={
-                errors.title ? errors.title.message : "Product Price"
-              }
-              defaultValue={productData.title}
-              {...register("title")}
-              className={cn(
-                "border w-full px-1 py-2 rounded-md col-span-2 ring focus-visible:outline-none ring-slate-50 block",
-                {
-                  ["placeholder:text-red-600"]: errors.title,
-                }
+            <div className="col-span-2">
+              <input
+                defaultValue={productData?.title}
+                placeholder="Product Price"
+                {...register("title")}
+                className="border w-full px-1 py-2 rounded-md  ring focus-visible:outline-none ring-slate-50 block"
+              />
+              {errors.title && (
+                <span className="inline-block mt-1 text-red-500">
+                  {errors.title?.message}
+                </span>
               )}
-            />
+            </div>
           </div>
           {/* Product Title  Section */}
           <hr className="my-5 border border-slate-100 rounded-lg" />
           {/* Product Price  Section */}
           <div className="grid grid-cols-4">
             <label className="block font-semibold">Price</label>
-            <input
-              defaultValue={productData.price}
-              placeholder={
-                errors.price ? errors.price.message : "Product Price"
-              }
-              type="string"
-              className={cn(
-                "border w-full px-1 py-2 rounded-md col-span-2 ring focus-visible:outline-none ring-slate-50 block",
-                {
-                  ["placeholder:text-red-600"]: errors.price,
+            <div className="col-span-2">
+              <input
+                defaultValue={productData?.price}
+                placeholder="Product Price"
+                type="string"
+                className={
+                  "border w-full px-1 py-2 rounded-md  ring focus-visible:outline-none ring-slate-50 block"
                 }
+                {...register("price")}
+              />
+              {errors.price && (
+                <span className="inline-block mt-1 text-red-500">
+                  {errors.price?.message}
+                </span>
               )}
-              {...register("price")}
-            />
+            </div>
           </div>
 
           {/* Product Price  Section */}
